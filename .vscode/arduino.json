@@ -1,5 +1,5 @@
 {
-    "sketch": "CodeTest.ino",
+    "board": "arduino:avr:uno",
     "programmer": "AVR ISP",
-    "board": "arduino:avr:uno"
+    "sketch": "CodeTest.ino"
 }
