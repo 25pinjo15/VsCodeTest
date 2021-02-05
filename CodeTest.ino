@@ -1,0 +1,234 @@
+//	Test de code
+//	Johny Pineault johny.pineault@gmail.com
+//
+//
+//
+//
+// 
+// Configure LCD_COLS, LCD_ROWS and BAUDRATE if desired/needed
+// Expected behavior of the sketch:
+// - characters received from serial port are displayed on LCD
+// - CR and LF are ignored/dropped
+//
+// =========================================================================
+
+
+
+
+
+// include the needed headers and library
+#include <Wire.h>
+#include <hd44780.h>						// main hd44780 header
+#include <hd44780ioClass/hd44780_I2Cexp.h>	// i2c expander i/o class header
+
+hd44780_I2Cexp lcd; // declare lcd object: auto locate & config exapander chip
+
+// LCD geometry
+const int LCD_COLS = 16;
+const int LCD_ROWS = 2;
+
+
+// ===VARIABLE DECLARATION===
+const int BAUDRATE = 9600; // Baudrate for serial
+
+#define buttonUp 7
+#define buttonDown 5
+#define buttonLeft 6
+#define buttonRight 4
+#define buttonSelect 3
+#define buttonBack 8
+
+	// Input Related
+int buttonStateUp = HIGH;			// Button 0 = Pressed 1 = Not Pressed
+int lastButtonStateUp = HIGH;		// Last reading
+
+int buttonStateDown = HIGH;			// Button 0 = Pressed 1 = Not Pressed
+int lastButtonStateDown = HIGH; 	// Last reading
+
+int buttonStateLeft = HIGH;			// Button 0 = Pressed 1 = Not Pressed
+int lastButtonStateLeft = HIGH; 	// Last reading
+
+int buttonStateRight = HIGH;		// Button 0 = Pressed 1 = Not Pressed
+int lastButtonStateRight = HIGH;	// Last reading
+
+int buttonStateSelect = HIGH;		// Button 0 = Pressed 1 = Not Pressed
+int lastButtonStateSelect = HIGH;	// Last reading
+
+int buttonStateBack = HIGH;			// Button 0 = Pressed 1 = Not Pressed
+int lastButtonStateBack = HIGH;		// Last reading
+
+	// Timming and counting related
+int count = 0; 							// To use with FOR
+
+
+int serialOutput = 300; 				// At wich speed the serial will output to console
+unsigned long lastSerialOutput = 0; 	//
+
+unsigned long lastDebounceTime = 0;		// The last time the output pin was toggled
+unsigned int debounceTime = 70; 		// The debounce time , how long a button need to be pressed
+
+int menuSelect = 0;
+int lastMenuSelect = 0;
+
+
+
+
+
+// ===SETUP START===
+
+void setup()
+{
+
+	// ===BUTTON INIT===
+	pinMode(buttonUp, INPUT);
+	pinMode(buttonDown, INPUT);
+	pinMode(buttonLeft, INPUT);
+	pinMode(buttonRight, INPUT);
+	pinMode(buttonSelect, INPUT);
+	pinMode(buttonBack, INPUT);
+
+
+
+
+
+
+
+	//	=== LCD INIT ===
+
+	int status;
+
+	// initalize Serial port
+	Serial.begin(BAUDRATE);
+
+	/* initialize LCD with number of columns and rows:
+	* hd44780 returns a status from begin() that can be used
+	* to determine if initalization failed.
+	* the actual status codes are defined in <hd44780.h>
+	*/
+	status = lcd.begin(LCD_COLS, LCD_ROWS);
+	if(status) // non zero status means it was unsuccesful
+	{
+		// begin() failed
+
+		Serial.print("LCD initalization failed: ");
+		Serial.println(status);
+
+		// blink error code using the onboard LED if possible
+		hd44780::fatalError(status); // does not return
+	}
+
+	// Serial.end();
+
+
+
+	/* turn on automatic line wrapping
+	* which automatically wraps lines to the next lower line and wraps back
+	* to the top when at the bottom line
+	* NOTE:
+	* noLineWrap() can be used to disable automatic line wrapping.
+	* _write() can be called instead of write() to send data bytes
+	* to the display bypassing any special character or line wrap processing.
+	*/
+	lcd.lineWrap();
+
+	lcd.print("Test_Button_I2C");
+	if(LCD_ROWS > 1)
+	{
+		lcd.setCursor(0,1);
+		lcd.print("Baud:");
+		lcd.print(BAUDRATE);
+	}
+
+	// === LCD INIT END ===
+
+
+	delay(3000);
+
+}
+// ===SETUP END===
+
+
+
+
+// ===LOOP START===
+void loop()
+{
+
+	unsigned long currentTime = millis();			// Use for common timming thing
+
+
+	// TODO: here the routine to chek button
+	// if (reading != last)
+
+
+	// Routine to state all button
+
+	buttonStateUp = digitalRead(buttonUp);
+	buttonStateDown = digitalRead(buttonDown);
+	buttonStateLeft = digitalRead(buttonLeft);
+	buttonStateRight = digitalRead(buttonRight);
+	buttonStateSelect = digitalRead(buttonSelect);
+	buttonStateBack = digitalRead(buttonBack);
+
+
+
+	// Routine to detect a button
+
+	if ( currentTime - lastSerialOutput >= serialOutput) {
+
+		int buttonArray[6] = {buttonStateUp, buttonStateDown, buttonStateLeft, buttonStateRight, buttonStateSelect, buttonStateBack};
+		for (int i = 0; i < 6; ++i)
+			{
+				if (buttonArray[i] == LOW) {
+					Serial.print("something happened on");
+			// dont work		Serial.write(buttonArray[i]);
+					Serial.println();
+				}
+				else {
+					Serial.print("Nothing on ");
+			// dont work		Serial.print(buttonArray[i]);
+					Serial.println();
+				}
+			}
+
+			/* Update the timing for the next event*/
+			lastSerialOutput = currentTime;
+	  }
+
+
+
+
+	// Menu related
+
+	if (menuSelect == 1)
+	{
+		screenButtonState();
+	}
+	menuSelect = 1;			// Set here wich menu is displaky on lcd
+
+
+}
+// ===LOOP END===
+
+
+
+
+
+// ===SCREEN UPDATE===
+void screenButtonState()
+{
+	if (lastMenuSelect != 1)
+	{
+	lcd.clear();
+	lcd.setCursor(0,0);
+	lcd.print("we are in btnst");
+	}
+
+	lcd.setCursor(0,1);
+	lcd.print(buttonStateUp);
+	lcd.print(buttonStateDown);
+	lcd.print(buttonStateLeft);
+	//delay(2000);
+
+}
+// ===SCREEN UPDATE END===
