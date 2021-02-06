@@ -12,7 +12,7 @@
 //
 // =========================================================================
 
-// Dev lol
+// ytruytruyr
 
 
 
@@ -221,7 +221,7 @@ void screenButtonState()
 	{
 	lcd.clear();
 	lcd.setCursor(0,0);
-	lcd.print("we are in btnst");
+	lcd.print("we are in pana");
 	}
 
 	lcd.setCursor(0,1);
