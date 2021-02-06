@@ -37,28 +37,34 @@ const int BAUDRATE = 9600; // Baudrate for serial
 #define buttonRight 4
 #define buttonSelect 3
 #define buttonBack 8
+int selectMenuPin = A0;		// Potentiometer connected to Analog in 0
 
 	// Input Related
-int buttonStateUp = HIGH;			// Button 0 = Pressed 1 = Not Pressed
-int lastButtonStateUp = HIGH;		// Last reading
+byte buttonStateUp = HIGH;			// Button 0 = Pressed 1 = Not Pressed
+byte lastButtonStateUp = HIGH;		// Last reading
 
-int buttonStateDown = HIGH;			// Button 0 = Pressed 1 = Not Pressed
-int lastButtonStateDown = HIGH; 	// Last reading
+byte buttonStateDown = HIGH;			// Button 0 = Pressed 1 = Not Pressed
+byte lastButtonStateDown = HIGH; 	// Last reading
 
-int buttonStateLeft = HIGH;			// Button 0 = Pressed 1 = Not Pressed
-int lastButtonStateLeft = HIGH; 	// Last reading
+byte buttonStateLeft = HIGH;			// Button 0 = Pressed 1 = Not Pressed
+byte lastButtonStateLeft = HIGH; 	// Last reading
 
-int buttonStateRight = HIGH;		// Button 0 = Pressed 1 = Not Pressed
-int lastButtonStateRight = HIGH;	// Last reading
+byte buttonStateRight = HIGH;		// Button 0 = Pressed 1 = Not Pressed
+byte lastButtonStateRight = HIGH;	// Last reading
 
-int buttonStateSelect = HIGH;		// Button 0 = Pressed 1 = Not Pressed
-int lastButtonStateSelect = HIGH;	// Last reading
+byte buttonStateSelect = HIGH;		// Button 0 = Pressed 1 = Not Pressed
+byte lastButtonStateSelect = HIGH;	// Last reading
 
-int buttonStateBack = HIGH;			// Button 0 = Pressed 1 = Not Pressed
-int lastButtonStateBack = HIGH;		// Last reading
+byte buttonStateBack = HIGH;			// Button 0 = Pressed 1 = Not Pressed
+byte lastButtonStateBack = HIGH;		// Last reading
+
+int selectMenuRead = 0;				// Brute reading of potentiometer
+int selectStateMenu = 0;			// Will be the analog map to the numeber of menu
+int lastSelectStateMenu = 0;		// Last reading
 
 	// Timming and counting related
 int count = 0; 							// To use with FOR
+
 
 
 int serialOutput = 300; 				// At wich speed the serial will output to console
@@ -198,14 +204,24 @@ void loop()
 
 
 
-	// Menu related
+	// Menu selection related
 
-	if (menuSelect == 1)
-	{
-		screenButtonState();
-	}
-	menuSelect = 1;			// Set here wich menu is displaky on lcd
+	selectMenuRead = analogRead(selectMenuPin);				// Read the potentiometer
+	selectStateMenu = map(selectMenuRead, 0, 1024, 1, 5);
+	
+	if (selectStateMenu == 1) {
+		menu1ButtonState();
+	} else if (selectStateMenu == 2) {
+			menu2Message();
+		} else if (selectStateMenu == 3) {
+			menu3();
+			} else if (selectStateMenu == 4) {
+				menu4();
+				}
 
+	
+	
+Serial.println(selectStateMenu);
 
 }
 // ===LOOP END===
@@ -215,19 +231,64 @@ void loop()
 
 
 // ===SCREEN UPDATE===
-void screenButtonState()
+void menu1ButtonState()
 {
-	if (lastMenuSelect != 1)
+	if (lastSelectStateMenu != 1)
 	{
 	lcd.clear();
 	lcd.setCursor(0,0);
-	lcd.print("we are in pana");
+	lcd.print("we are in test 1");
+	lastSelectStateMenu = 1;
 	}
 
 	lcd.setCursor(0,1);
 	lcd.print(buttonStateUp);
 	lcd.print(buttonStateDown);
 	lcd.print(buttonStateLeft);
+	//delay(2000);
+
+}
+
+void menu2Message()
+{
+	if (lastSelectStateMenu != 2)
+	{
+	lcd.clear();
+	lcd.setCursor(0,0);
+	lcd.print("we are in message");
+	lastSelectStateMenu = 2;
+	}
+
+
+	//do something else
+
+}
+
+void menu3()
+{
+	if (lastSelectStateMenu != 3)
+	{
+	lcd.clear();
+	lcd.setCursor(0,0);
+	lcd.print("we are in 3");
+	lastSelectStateMenu = 3;
+	}
+
+// write something
+
+}
+
+void menu4()
+{
+	if (lastSelectStateMenu != 4)
+	{
+	lcd.clear();
+	lcd.setCursor(0,0);
+	lcd.print("we are in 4");
+	lastSelectStateMenu = 4;
+	}
+
+// write something 
 	//delay(2000);
 
 }
