@@ -217,7 +217,7 @@ void loop()
 // ===SCREEN UPDATE===
 void screenButtonState()
 {
-	if (lastMenuSelect !=r 1)
+	if (lastMenuSelect != 1)
 	{
 	lcd.clear();
 	lcd.setCursor(0,0);
