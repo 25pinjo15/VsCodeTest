@@ -1,5 +1,6 @@
 {
+    "sketch": "CodeTest.ino",
     "board": "arduino:avr:uno",
     "programmer": "AVR ISP",
-    "sketch": "CodeTest.ino"
+    "port":"COM9"
 }
