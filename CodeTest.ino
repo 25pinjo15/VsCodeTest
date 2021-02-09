@@ -77,7 +77,7 @@ int serialOutput = 20; 				// At wich speed the serial will output to console
 unsigned long lastSerialOutput = 0; 	//
 
 unsigned long lastDebounceDelay = 0;		// The last time the output pin was toggled
-unsigned int debounceDelay = 70; 		// The debounce time , how long a button need to be pressed
+int debounceDelay = 70; 		// The debounce time , how long a button need to be pressed
 
 int menuSelect = 0;
 int lastMenuSelect = 0;
@@ -199,16 +199,20 @@ void loop()
 	//	}
 
 
-		if (buttonStateArray[i] == LOW) {
+// ERROR: this shit dont work ..... CRISSS 
+
+		for (buttonStateArray[i] == LOW) {
 			count++;
+			if (count > debounceDelay) {
+			lastButtonStateArray[i] = 0;
+			}
 			
-			
-			if (count >= debounceDelay) {
-				lastButtonStateArray[i] = LOW;
-				 count = 0;
-				}
-		}
+			}
+	
+
+		
 	}
+
 
 
 	// Menu selection related
