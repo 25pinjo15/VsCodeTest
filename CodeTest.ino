@@ -219,11 +219,11 @@ void buttonRoutine() {
 
 	if (buttonStateUp = LOW)
 	{
-	count	
+	count++	;
 	}
 	
 
-	/*
+	
 	
 	// Routine to detect button press with software debounce 
 	int debounceTimer;
@@ -249,7 +249,7 @@ void buttonRoutine() {
 			count = 0;
 			}
 
-	*/
+	
 
 		
 	}
