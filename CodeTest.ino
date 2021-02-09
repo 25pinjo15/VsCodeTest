@@ -30,7 +30,7 @@ const int LCD_ROWS = 2;
 
 
 
-// ===INPUT PIN NUMBER===
+// ====INPUT PIN NUMBER====
 #define buttonUp 7
 #define buttonDown 5
 #define buttonLeft 6
@@ -39,7 +39,7 @@ const int LCD_ROWS = 2;
 #define buttonBack 8
 int selectMenuPin = A0;		// Potentiometer connected to Analog in 0
 
-// ===VARIABLE DECLARATION===
+// ====VARIABLE DECLARATION====
 
 const int BAUDRATE = 9600; // Baudrate for serial	
 	
@@ -86,8 +86,7 @@ int lastMenuSelect = 0;
 
 
 
-// ===SETUP START===
-
+// ==== SETUP START ====
 void setup()
 {
 
@@ -161,62 +160,19 @@ void setup()
 	//Serial.end()
 
 }
-// ===SETUP END===
+// ==== SETUP END ====
 
 
 
 
-// ===LOOP START===
+// ==== LOOP START ====
 void loop()
 {
-
 	unsigned long currentTime = millis();			// Use for common timming thing
-
-
-	 // here the routine to chek button
-	// if (reading != last)
-
-
-	// Routine to state all button
-
-	buttonStateUp = digitalRead(buttonUp);
-	buttonStateDown = digitalRead(buttonDown);
-	buttonStateLeft = digitalRead(buttonLeft);
-	buttonStateRight = digitalRead(buttonRight);
-	buttonStateSelect = digitalRead(buttonSelect);
-	buttonStateBack = digitalRead(buttonBack);
-
-	
-	
-	// Routine to detect button press with software debounce 
-	int debounceTimer;
-	int lastButtonStateArray[6] = {lastButtonStateUp, lastButtonStateDown, lastButtonStateLeft, lastButtonStateRight, lastButtonStateSelect, lastButtonStateBack};
-	int buttonStateArray[6] = {buttonStateUp, buttonStateDown, buttonStateLeft, buttonStateRight, buttonStateSelect, buttonStateBack};
-	for (int i = 0; i < 6; ++i) {
-		
-	//	if (lastButtonStateArray[i] != lastButtonStateArray[i]) {
-	//		lastDebounceDelay = millis();
-	//	}
-
-
-// ERROR: this shit dont work ..... CRISSS 
-
-		for (buttonStateArray[i] == LOW) {
-			count++;
-			if (count > debounceDelay) {
-			lastButtonStateArray[i] = 0;
-			}
-			
-			}
-	
-
-		
-	}
-
-
+	// Call the button routine
+	buttonRoutine();
 
 	// Menu selection related
-
 	selectMenuRead = analogRead(selectMenuPin);				// Read the potentiometer
 	selectStateMenu = map(selectMenuRead, 0, 1024, 1, 5);
 	
@@ -247,13 +203,62 @@ void loop()
 	}
 
 }
-// ===LOOP END===
+// ==== LOOP END ====
 
 
+// ==== BUTTON MANAGEMENT START ====
+void buttonRoutine() {
+	// Routine to state all button
 
+	buttonStateUp = digitalRead(buttonUp);
+	buttonStateDown = digitalRead(buttonDown);
+	buttonStateLeft = digitalRead(buttonLeft);
+	buttonStateRight = digitalRead(buttonRight);
+	buttonStateSelect = digitalRead(buttonSelect);
+	buttonStateBack = digitalRead(buttonBack);
 
+	if (buttonStateUp = LOW)
+	{
+	count	
+	}
+	
 
-// ===SCREEN UPDATE===
+	/*
+	
+	// Routine to detect button press with software debounce 
+	int debounceTimer;
+	int lastButtonStateArray[6] = {lastButtonStateUp, lastButtonStateDown, lastButtonStateLeft, lastButtonStateRight, lastButtonStateSelect, lastButtonStateBack};
+	int buttonStateArray[6] = {buttonStateUp, buttonStateDown, buttonStateLeft, buttonStateRight, buttonStateSelect, buttonStateBack};
+	for (int i = 0; i < 6; ++i) {
+		
+	//	if (lastButtonStateArray[i] != lastButtonStateArray[i]) {
+	//		lastDebounceDelay = millis();
+	//	}
+
+ 
+
+		if (buttonStateArray[i] == LOW) {
+			count++;
+			
+			
+			}
+			
+		if (count > debounceDelay) {
+			lastButtonStateArray[i] = LOW;
+			Serial.print("coliss");
+			count = 0;
+			}
+
+	*/
+
+		
+	}
+
+}
+// ==== BUTTON MANAGEMENT END ====
+
+// ==== SCREEN UPDATE ======== 
+
 void menu1ButtonTest()
 {
 	if (lastSelectStateMenu != 1)
@@ -326,4 +331,4 @@ void menu4()
 	//delay(2000);
 
 }
-// ===SCREEN UPDATE END===
+// ====SCREEN UPDATE END====
