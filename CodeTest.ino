@@ -28,9 +28,9 @@ const int LCD_COLS = 16;
 const int LCD_ROWS = 2;
 
 
-// ===VARIABLE DECLARATION===
-const int BAUDRATE = 9600; // Baudrate for serial
 
+
+// ===INPUT PIN NUMBER===
 #define buttonUp 7
 #define buttonDown 5
 #define buttonLeft 6
@@ -38,6 +38,11 @@ const int BAUDRATE = 9600; // Baudrate for serial
 #define buttonSelect 3
 #define buttonBack 8
 int selectMenuPin = A0;		// Potentiometer connected to Analog in 0
+
+// ===VARIABLE DECLARATION===
+
+const int BAUDRATE = 9600; // Baudrate for serial	
+	
 
 	// Input Related
 byte buttonStateUp = HIGH;			// Button 0 = Pressed 1 = Not Pressed
@@ -62,16 +67,17 @@ int selectMenuRead = 0;				// Brute reading of potentiometer
 int selectStateMenu = 0;			// Will be the analog map to the numeber of menu
 int lastSelectStateMenu = 0;		// Last reading
 
+	
 	// Timming and counting related
 int count = 0; 							// To use with FOR
 
+int menu1ButtonTestPage = 1;			// Page at wich the menu is 
 
-
-int serialOutput = 300; 				// At wich speed the serial will output to console
+int serialOutput = 20; 				// At wich speed the serial will output to console
 unsigned long lastSerialOutput = 0; 	//
 
-unsigned long lastDebounceTime = 0;		// The last time the output pin was toggled
-unsigned int debounceTime = 70; 		// The debounce time , how long a button need to be pressed
+unsigned long lastDebounceDelay = 0;		// The last time the output pin was toggled
+unsigned int debounceDelay = 70; 		// The debounce time , how long a button need to be pressed
 
 int menuSelect = 0;
 int lastMenuSelect = 0;
@@ -150,6 +156,10 @@ void setup()
 
 	delay(3000);
 
+	
+	// DEBUG: Don't end serial for debug
+	//Serial.end()
+
 }
 // ===SETUP END===
 
@@ -163,7 +173,7 @@ void loop()
 	unsigned long currentTime = millis();			// Use for common timming thing
 
 
-	// TODO: here the routine to chek button
+	 // here the routine to chek button
 	// if (reading != last)
 
 
@@ -176,32 +186,29 @@ void loop()
 	buttonStateSelect = digitalRead(buttonSelect);
 	buttonStateBack = digitalRead(buttonBack);
 
+	
+	
+	// Routine to detect button press with software debounce 
+	int debounceTimer;
+	int lastButtonStateArray[6] = {lastButtonStateUp, lastButtonStateDown, lastButtonStateLeft, lastButtonStateRight, lastButtonStateSelect, lastButtonStateBack};
+	int buttonStateArray[6] = {buttonStateUp, buttonStateDown, buttonStateLeft, buttonStateRight, buttonStateSelect, buttonStateBack};
+	for (int i = 0; i < 6; ++i) {
+		
+	//	if (lastButtonStateArray[i] != lastButtonStateArray[i]) {
+	//		lastDebounceDelay = millis();
+	//	}
 
 
-	// Routine to detect a button
-
-	if ( currentTime - lastSerialOutput >= serialOutput) {
-
-		int buttonArray[6] = {buttonStateUp, buttonStateDown, buttonStateLeft, buttonStateRight, buttonStateSelect, buttonStateBack};
-		for (int i = 0; i < 6; ++i)
-			{
-				if (buttonArray[i] == LOW) {
-					Serial.print("something happened on");
-			// dont work		Serial.write(buttonArray[i]);
-					Serial.println();
+		if (buttonStateArray[i] == LOW) {
+			count++;
+			
+			
+			if (count >= debounceDelay) {
+				lastButtonStateArray[i] = LOW;
+				 count = 0;
 				}
-				else {
-					Serial.print("Nothing on ");
-			// dont work		Serial.print(buttonArray[i]);
-					Serial.println();
-				}
-			}
-
-			/* Update the timing for the next event*/
-			lastSerialOutput = currentTime;
-	  }
-
-
+		}
+	}
 
 
 	// Menu selection related
@@ -210,7 +217,7 @@ void loop()
 	selectStateMenu = map(selectMenuRead, 0, 1024, 1, 5);
 	
 	if (selectStateMenu == 1) {
-		menu1ButtonState();
+		menu1ButtonTest();
 	} else if (selectStateMenu == 2) {
 			menu2Message();
 		} else if (selectStateMenu == 3) {
@@ -220,8 +227,20 @@ void loop()
 				}
 
 	
-	
-Serial.println(selectStateMenu);
+// NOTE: 	
+//DEBUG:
+
+	if (currentTime - lastSerialOutput >= serialOutput) {
+		Serial.print(buttonStateUp);
+		Serial.print(" and ");
+		Serial.print(lastButtonStateUp);
+		Serial.print(lastButtonStateDown);
+		Serial.println();
+		Serial.print(count);
+		Serial.println();
+
+		lastSerialOutput = currentTime;
+	}
 
 }
 // ===LOOP END===
@@ -231,7 +250,7 @@ Serial.println(selectStateMenu);
 
 
 // ===SCREEN UPDATE===
-void menu1ButtonState()
+void menu1ButtonTest()
 {
 	if (lastSelectStateMenu != 1)
 	{
@@ -246,20 +265,31 @@ void menu1ButtonState()
 	lcd.print(buttonStateDown);
 	lcd.print(buttonStateLeft);
 	//delay(2000);
+	
+
+  
 
 }
 
 void menu2Message()
 {
+	
+	// Routine to show a message first.	
 	if (lastSelectStateMenu != 2)
 	{
 	lcd.clear();
 	lcd.setCursor(0,0);
 	lcd.print("we are in message");
 	lastSelectStateMenu = 2;
+	delay(1500);
 	}
 
+	lcd.clear();
+	lcd.setCursor(0,0);
+	lcd.print(count);
 
+
+	
 	//do something else
 
 }
