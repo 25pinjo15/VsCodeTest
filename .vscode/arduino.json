@@ -1,6 +1,0 @@
-{
-    "sketch": "CodeTest.ino",
-    "board": "arduino:avr:uno",
-    "programmer": "AVR ISP",
-    "port": "COM9"
-}
