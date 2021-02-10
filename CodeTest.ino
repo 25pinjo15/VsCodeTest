@@ -1,8 +1,8 @@
 //	Test de code
 //	Johny Pineault johny.pineault@gmail.com
 //
-//
-//
+//  -Code now hosted on github
+//	-Switched over VS Code
 //
 // 
 // Configure LCD_COLS, LCD_ROWS and BAUDRATE if desired/needed
@@ -10,27 +10,35 @@
 // - characters received from serial port are displayed on LCD
 // - CR and LF are ignored/dropped
 //
-// =========================================================================
+// Synthax used: NOTE: ... its a note, DEBUGER: related, ERROR: there is a error here ... it don't work yet ect ,
+// ==== : Start of ...
+// ---- : end of ...
+//
+//
+// ---------------------------------------------------------------------------
 
-// ytruytruyr
 
+// ==== LIBRARY AND ECT ====
 
-
-// include the needed headers and library
+	// include the needed headers and library
 #include <Wire.h>
 #include <hd44780.h>						// main hd44780 header
 #include <hd44780ioClass/hd44780_I2Cexp.h>	// i2c expander i/o class header
 
 hd44780_I2Cexp lcd; // declare lcd object: auto locate & config exapander chip
 
-// LCD geometry
+	// LCD geometry
 const int LCD_COLS = 16;
 const int LCD_ROWS = 2;
 
+const int BAUDRATE = 9600; // Baudrate for serial
+
+// ---- LIBRARY AND ECT END ----
 
 
+// ==== PIN NUMBER ====
 
-// ====INPUT PIN NUMBER====
+	// Input
 #define buttonUp 7
 #define buttonDown 5
 #define buttonLeft 6
@@ -39,10 +47,11 @@ const int LCD_ROWS = 2;
 #define buttonBack 8
 int selectMenuPin = A0;		// Potentiometer connected to Analog in 0
 
-// ====VARIABLE DECLARATION====
+	// Output
 
-const int BAUDRATE = 9600; // Baudrate for serial	
-	
+//---- PIN NUMBER END ----
+
+// ==== VARIABLE DECLARATION START ====
 
 	// Input Related
 byte buttonStateUp = HIGH;			// Button 0 = Pressed 1 = Not Pressed
@@ -82,7 +91,7 @@ int debounceDelay = 70; 		// The debounce time , how long a button need to be pr
 int menuSelect = 0;
 int lastMenuSelect = 0;
 
-
+// ---- VARIABLE DECLARATION END ----
 
 
 
@@ -156,11 +165,11 @@ void setup()
 	delay(3000);
 
 	
-	// DEBUG: Don't end serial for debug
+	// DEBUGER: Don't end serial for debug
 	//Serial.end()
 
 }
-// ==== SETUP END ====
+// ---- SETUP END ----
 
 
 
@@ -188,7 +197,7 @@ void loop()
 
 	
 // NOTE: 	
-//DEBUG:
+//DEBUGER:
 
 	if (currentTime - lastSerialOutput >= serialOutput) {
 		Serial.print(buttonStateUp);
@@ -203,7 +212,7 @@ void loop()
 	}
 
 }
-// ==== LOOP END ====
+// ---- LOOP END ----
 
 
 // ==== BUTTON MANAGEMENT START ====
@@ -255,7 +264,7 @@ void buttonRoutine() {
 	}
 
 }
-// ==== BUTTON MANAGEMENT END ====
+// ---- BUTTON MANAGEMENT END ----
 
 // ==== SCREEN UPDATE ======== 
 
@@ -280,7 +289,7 @@ void menu1ButtonTest()
 
 }
 
-void menu2Message()
+void 	menu2Message()
 {
 	
 	// Routine to show a message first.	
@@ -331,4 +340,4 @@ void menu4()
 	//delay(2000);
 
 }
-// ====SCREEN UPDATE END====
+// ---- SCREEN UPDATE END ----
