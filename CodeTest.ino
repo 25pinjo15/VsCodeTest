@@ -115,7 +115,7 @@ void setup()
 
 
 
-	//	=== LCD INIT ===
+	//	==== LCD INIT ====
 
 	int status;
 
@@ -139,14 +139,10 @@ void setup()
 		hd44780::fatalError(status); // does not return
 	}
 
-	// Serial.end();
 
-
-
-	/* turn on automatic line wrapping
+	/* NOTE: turn on automatic line wrapping
 	* which automatically wraps lines to the next lower line and wraps back
 	* to the top when at the bottom line
-	* NOTE:
 	* noLineWrap() can be used to disable automatic line wrapping.
 	* _write() can be called instead of write() to send data bytes
 	* to the display bypassing any special character or line wrap processing.
@@ -161,7 +157,7 @@ void setup()
 		lcd.print(BAUDRATE);
 	}
 
-	// === LCD INIT END ===
+	// ---- LCD INIT END ----
 
 
 	delay(3000);
