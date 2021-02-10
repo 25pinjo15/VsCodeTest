@@ -31,7 +31,7 @@ hd44780_I2Cexp lcd; // declare lcd object: auto locate & config exapander chip
 const int LCD_COLS = 16;
 const int LCD_ROWS = 2;
 
-const int BAUDRATE = 9600; // Baudrate for serial
+const int BAUDRATE = 19200; // Baudrate for serial
 
 // ---- LIBRARY AND ECT END ----
 
@@ -56,6 +56,7 @@ int selectMenuPin = A0;		// Potentiometer connected to Analog in 0
 	// Input Related
 byte buttonStateUp = HIGH;			// Button 0 = Pressed 1 = Not Pressed
 byte lastButtonStateUp = HIGH;		// Last reading
+int buttonTimeUp = 0;
 
 byte buttonStateDown = HIGH;			// Button 0 = Pressed 1 = Not Pressed
 byte lastButtonStateDown = HIGH; 	// Last reading
@@ -78,7 +79,8 @@ int lastSelectStateMenu = 0;		// Last reading
 
 	
 	// Timming and counting related
-int count = 0; 							// To use with FOR
+unsigned long count = 0; 							// To use with FOR
+unsigned long lastCount = 0;
 
 int menu1ButtonTestPage = 1;			// Page at wich the menu is 
 
@@ -200,6 +202,7 @@ void loop()
 //DEBUGER:
 
 	if (currentTime - lastSerialOutput >= serialOutput) {
+		Serial.println();
 		Serial.print(buttonStateUp);
 		Serial.print(" and ");
 		Serial.print(lastButtonStateUp);
@@ -227,8 +230,36 @@ void buttonRoutine() {
 	buttonStateBack = digitalRead(buttonBack);
 
 	
+		// Stat a timer when a button is pressed
+	if (buttonStateUp == LOW || buttonStateDown == LOW || buttonStateLeft == LOW || buttonStateRight == LOW || buttonStateSelect == LOW || buttonStateBack == LOW) {
+		count++;
+	} else {
+		count = 0;
+	}
 	
+		// Call for button Up
+	if (buttonStateUp == LOW && count >= debounceDelay) {
+		lastButtonStateUp = LOW;
 
+		if (count > debounceDelay + 30) {
+			count = 0;
+		}
+	} else {
+		lastButtonStateUp = HIGH;
+	}
+
+		// Call for button Down
+	if (buttonStateDown == LOW && count >= debounceDelay) {
+		lastButtonStateDown = LOW;
+
+		if (count > debounceDelay + 30) {
+			count = 0;
+		}
+	} else {
+		lastButtonStateDown = HIGH;
+	}
+
+/* Some Poop that didnt work 
 	
 	
 	// Routine to detect button press with software debounce 
@@ -257,12 +288,9 @@ void buttonRoutine() {
 		} else if (buttonStateUp == HIGH) {
 			count = 0;
 			lastButtonStateUp = HIGH;
-		}
-	
-
-		
+			}	
 	}
-
+*/
 }
 // ---- BUTTON MANAGEMENT END ----
 
