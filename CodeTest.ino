@@ -198,7 +198,6 @@ void loop()
 				}
 
 	
-// NOTE: 	
 //DEBUGER:
 
 	if (currentTime - lastSerialOutput >= serialOutput) {
@@ -259,6 +258,49 @@ void buttonRoutine() {
 		lastButtonStateDown = HIGH;
 	}
 
+	// Call for button Left
+	if (buttonStateLeft == LOW && count >= debounceDelay) {
+		lastButtonStateLeft = LOW;
+
+		if (count > debounceDelay + 30) {
+			count = 0;
+		}
+	} else {
+		lastButtonStateLeft = HIGH;
+	}
+
+	// Call for button Right
+	if (buttonStateRight == LOW && count >= debounceDelay) {
+		lastButtonStateRight = LOW;
+
+		if (count > debounceDelay + 30) {
+			count = 0;
+		}
+	} else {
+		lastButtonStateRight = HIGH;
+	}
+
+	// Call for button Select
+	if (buttonStateSelect == LOW && count >= debounceDelay) {
+		lastButtonStateSelect = LOW;
+
+		if (count > debounceDelay + 30) {
+			count = 0;
+		}
+	} else {
+		lastButtonStateSelect = HIGH;
+	}
+
+	// Call for button Back
+	if (buttonStateBack == LOW && count >= debounceDelay) {
+		lastButtonStateBack = LOW;
+
+		if (count > debounceDelay + 30) {
+			count = 0;
+		}
+	} else {
+		lastButtonStateBack = HIGH;
+	}
 /* Some Poop that didnt work 
 	
 	
@@ -304,6 +346,8 @@ void menu1ButtonTest()
 	lcd.print("we are in test 1");
 	lastSelectStateMenu = 1;
 	}
+
+// NOTE: im here . need to make a page to test all input :)
 
 	lcd.setCursor(0,1);
 	lcd.print(lastButtonStateUp);
