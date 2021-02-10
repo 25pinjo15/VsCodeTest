@@ -226,10 +226,7 @@ void buttonRoutine() {
 	buttonStateSelect = digitalRead(buttonSelect);
 	buttonStateBack = digitalRead(buttonBack);
 
-	if (buttonStateUp = LOW)
-	{
-	count++	;
-	}
+	
 	
 
 	
@@ -247,17 +244,20 @@ void buttonRoutine() {
  
 
 		if (buttonStateArray[i] == LOW) {
-			count++;
-			
-			
-			}
+			count++;	
+		} 
 			
 		if (count > debounceDelay) {
-			lastButtonStateArray[i] = LOW;
-			Serial.print("coliss");
+			lastButtonStateUp = LOW;
+			Serial.println();
+			Serial.print("HEEEE  ");
+			Serial.print(lastButtonStateUp);
+			Serial.println();
 			count = 0;
-			}
-
+		} else if (buttonStateUp == HIGH) {
+			count = 0;
+			lastButtonStateUp = HIGH;
+		}
 	
 
 		
@@ -270,8 +270,7 @@ void buttonRoutine() {
 
 void menu1ButtonTest()
 {
-	if (lastSelectStateMenu != 1)
-	{
+	if (lastSelectStateMenu != 1) {
 	lcd.clear();
 	lcd.setCursor(0,0);
 	lcd.print("we are in test 1");
@@ -279,7 +278,7 @@ void menu1ButtonTest()
 	}
 
 	lcd.setCursor(0,1);
-	lcd.print(buttonStateUp);
+	lcd.print(lastButtonStateUp);
 	lcd.print(buttonStateDown);
 	lcd.print(buttonStateLeft);
 	//delay(2000);
@@ -289,7 +288,7 @@ void menu1ButtonTest()
 
 }
 
-void 	menu2Message()
+void menu2Message()
 {
 	
 	// Routine to show a message first.	
