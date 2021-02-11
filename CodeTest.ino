@@ -89,6 +89,7 @@ unsigned long lastSerialOutput = 0; 	//
 
 unsigned long lastDebounceDelay = 0;		// The last time the output pin was toggled
 int debounceDelay = 70; 		// The debounce time , how long a button need to be pressed
+int afterDebouceDelay = 40; 	// The time 
 
 int menuSelect = 0;
 int lastMenuSelect = 0;
@@ -160,7 +161,7 @@ void setup()
 	// ---- LCD INIT END ----
 
 
-	delay(3000);
+	delay afterDebouceDelay00);
 
 	
 	// DEBUGER: Don't end serial for debug
@@ -236,7 +237,7 @@ void buttonRoutine() {
 	if (buttonStateUp == LOW && count >= debounceDelay) {
 		lastButtonStateUp = LOW;
 
-		if (count > debounceDelay + 30) {
+		if (count > debounceDelay + afterDebouceDelay) {
 			count = 0;
 		}
 	} else {
@@ -247,7 +248,7 @@ void buttonRoutine() {
 	if (buttonStateDown == LOW && count >= debounceDelay) {
 		lastButtonStateDown = LOW;
 
-		if (count > debounceDelay + 30) {
+		if (count > debounceDelay + afterDebouceDelay) {
 			count = 0;
 		}
 	} else {
@@ -258,7 +259,7 @@ void buttonRoutine() {
 	if (buttonStateLeft == LOW && count >= debounceDelay) {
 		lastButtonStateLeft = LOW;
 
-		if (count > debounceDelay + 30) {
+		if (count > debounceDelay + afterDebouceDelay) {
 			count = 0;
 		}
 	} else {
@@ -269,7 +270,7 @@ void buttonRoutine() {
 	if (buttonStateRight == LOW && count >= debounceDelay) {
 		lastButtonStateRight = LOW;
 
-		if (count > debounceDelay + 30) {
+		if (count > debounceDelay + afterDebouceDelay) {
 			count = 0;
 		}
 	} else {
@@ -280,7 +281,7 @@ void buttonRoutine() {
 	if (buttonStateSelect == LOW && count >= debounceDelay) {
 		lastButtonStateSelect = LOW;
 
-		if (count > debounceDelay + 30) {
+		if (count > debounceDelay + afterDebouceDelay) {
 			count = 0;
 		}
 	} else {
@@ -291,7 +292,7 @@ void buttonRoutine() {
 	if (buttonStateBack == LOW && count >= debounceDelay) {
 		lastButtonStateBack = LOW;
 
-		if (count > debounceDelay + 30) {
+		if (count > debounceDelay + afterDebouceDelay) {
 			count = 0;
 		}
 	} else {
