@@ -18,6 +18,11 @@
 // ---------------------------------------------------------------------------
 
 
+
+
+
+
+
 // ==== LIBRARY AND ECT ====
 
 	// include the needed headers and library
@@ -48,7 +53,7 @@ const int BAUDRATE = 19200; // Baudrate for serial
 int selectMenuPin = A0;		// Potentiometer connected to Analog in 0
 
 	// Output
-
+#define ledGreen 12
 //---- PIN NUMBER END ----
 
 // ==== VARIABLE DECLARATION START ====
@@ -88,11 +93,16 @@ int serialOutput = 20; 				// At wich speed the serial will output to console
 unsigned long lastSerialOutput = 0; 	//
 
 unsigned long lastDebounceDelay = 0;		// The last time the output pin was toggled
-int debounceDelay = 70; 		// The debounce time , how long a button need to be pressed
-int afterDebouceDelay = 40; 	// The time 
+const int debounceDelay = 30; 		// The debounce time , how long a button need to be pressed
+const int afterDebouceDelay = 90; 	// The time 
 
-int menuSelect = 0;
-int lastMenuSelect = 0;
+byte menuSelect = 0;
+byte lastMenuSelect = 0;
+
+ //	Menu 2 related variable
+
+// NOTE: For testing and fun purpose
+boolean ledOut = LOW; // A output for test on menu will turn on and off a led on 
 
 // ---- VARIABLE DECLARATION END ----
 
@@ -103,13 +113,16 @@ void setup()
 {
 
 	// ===BUTTON INIT===
+	
+	// In
 	pinMode(buttonUp, INPUT);
 	pinMode(buttonDown, INPUT);
 	pinMode(buttonLeft, INPUT);
 	pinMode(buttonRight, INPUT);
 	pinMode(buttonSelect, INPUT);
 	pinMode(buttonBack, INPUT);
-
+	//	OUT
+	pinMode(ledGreen, OUTPUT);
 
 
 
@@ -161,7 +174,7 @@ void setup()
 	// ---- LCD INIT END ----
 
 
-	delay afterDebouceDelay00);
+	delay(1000);
 
 	
 	// DEBUGER: Don't end serial for debug
@@ -374,9 +387,17 @@ void menu2Message()
 	lcd.setCursor(0,0);
 	lcd.print(count);
 
+// NOTE: try to flip led on and off , work but glitchy . 
+	if (lastButtonStateUp == LOW) {
+		if (ledOut == LOW) {
+			ledOut = HIGH;
+			digitalWrite(ledGreen, ledOut);
+	} else {
+		ledOut = LOW;
+		digitalWrite(ledGreen, ledOut);
+		}
+	}
 
-	
-	//do something else
 
 }
 
