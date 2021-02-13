@@ -93,7 +93,7 @@ int serialOutput = 20; 				// At wich speed the serial will output to console
 unsigned long lastSerialOutput = 0; 	//
 
 unsigned long lastDebounceDelay = 0;		// The last time the output pin was toggled
-const int debounceDelay = 30; 		// The debounce time , how long a button need to be pressed
+const int debounceDelay = 15; 		// The debounce time , how long a button need to be pressed
 const int afterDebouceDelay = 90; 	// The time 
 
 byte menuSelect = 0;
@@ -101,8 +101,9 @@ byte lastMenuSelect = 0;
 
  //	Menu 2 related variable
 
-// NOTE: For testing and fun purpose
-boolean ledOut = LOW; // A output for test on menu will turn on and off a led on 
+// TEST: For testing and fun purpose
+bool ledOut = LOW; // A output for test on menu will turn on and off a led on 
+int lastCommand = 0; // for testing command time
 
 // ---- VARIABLE DECLARATION END ----
 
@@ -170,15 +171,16 @@ void setup()
 		lcd.print("Baud:");
 		lcd.print(BAUDRATE);
 	}
-
+	delay(1000);
 	// ---- LCD INIT END ----
 
 
-	delay(1000);
+	
 
 	
-	// DEBUGER: Don't end serial for debug
-	//Serial.end()
+ // DEBUGER: Don't end serial for debug
+	
+ //			  Serial.end();
 
 }
 // ---- SETUP END ----
@@ -208,22 +210,26 @@ void loop()
 				}
 
 	
-//DEBUGER:
+ //DEBUGER:
+
+ 
 
 	if (currentTime - lastSerialOutput >= serialOutput) {
 		Serial.println();
 		Serial.print(buttonStateUp);
 		Serial.print(" and ");
 		Serial.print(lastButtonStateUp);
-		Serial.print(lastButtonStateDown);
+		Serial.print(ledOut);
 		Serial.println();
 		Serial.print(count);
 		Serial.println();
 
 		lastSerialOutput = currentTime;
 	}
+ 
 
 }
+
 // ---- LOOP END ----
 
 
@@ -245,17 +251,24 @@ void buttonRoutine() {
 	} else {
 		count = 0;
 	}
-	
+	if (buttonStateUp == HIGH && lastButtonStateUp == LOW) {
+		lastButtonStateUp = HIGH;
+	}
 		// Call for button Up
 	if (buttonStateUp == LOW && count >= debounceDelay) {
 		lastButtonStateUp = LOW;
 
-		if (count > debounceDelay + afterDebouceDelay) {
-			count = 0;
-		}
-	} else {
-		lastButtonStateUp = HIGH;
-	}
+//  TEST:
+
+//		if (count > (debounceDelay + afterDebouceDelay)) {
+//			count = 0;
+//		}
+
+
+//TEST:
+	} //else {
+	//	lastButtonStateUp = HIGH;
+//	}
 
 		// Call for button Down
 	if (buttonStateDown == LOW && count >= debounceDelay) {
@@ -311,6 +324,11 @@ void buttonRoutine() {
 	} else {
 		lastButtonStateBack = HIGH;
 	}
+
+
+
+
+
 /* Some Poop that didnt work 
 	
 	
@@ -388,15 +406,19 @@ void menu2Message()
 	lcd.print(count);
 
 // NOTE: try to flip led on and off , work but glitchy . 
-	if (lastButtonStateUp == LOW) {
+
+	if (lastButtonStateUp == LOW && lastCommand == 0) {
+		lastCommand = 70;
 		if (ledOut == LOW) {
 			ledOut = HIGH;
-			digitalWrite(ledGreen, ledOut);
-	} else {
-		ledOut = LOW;
-		digitalWrite(ledGreen, ledOut);
-		}
+		} else if (ledOut == HIGH) {
+			ledOut = LOW;
+		}		
+	digitalWrite(ledGreen, ledOut);
 	}
+if (lastCommand > 0) {
+	lastCommand = lastCommand - 1;
+}
 
 
 }
