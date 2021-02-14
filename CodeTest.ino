@@ -84,12 +84,13 @@ int lastSelectStateMenu = 0;		// Last reading
 
 	
 	// Timming and counting related
-unsigned long buttonTime = 0; 							// Debounce
-unsigned long lastDebounceDelay = 0;		// The last time the output pin was toggled
-const int debounceDelay = 15; 		// The debounce time , how long a button need to be pressed
-const int afterDebouceDelay = 90; 	// The time 
-unsigned long currentTime = 0;
-// unsigned long lastbuttonTime = 0;
+unsigned long buttonTime = 0; 					// Debounce related
+unsigned long lastDebounceDelay = 0;			// The last time the output pin was toggled
+const int debounceDelay = 30; 					// The debounce time , how long a button need to be pressed
+const int afterDebouceDelay = 90; 				// For button repetition.
+unsigned long currentTime = 0;					// Total time since program is lauch.
+int timeDifference = 0;							// Time difference between each loop . Use for timming purpose.
+// unsigned long lastbuttonTime = 0
 
 int menu1ButtonTestPage = 1;			// Page at wich the menu is 
 
@@ -193,8 +194,9 @@ void setup()
 // ==== LOOP START ====
 void loop()
 {
+	timeDifference = millis() - currentTime; // Used for timming reference
 	currentTime = millis();			// Use for common timming thing
-		
+	
 	// Call the button routine
 	buttonRoutine();
 
@@ -250,7 +252,8 @@ void buttonRoutine() {
 	
 		// Start a timer when a button is pressed
 	if (buttonStateUp == LOW || buttonStateDown == LOW || buttonStateLeft == LOW || buttonStateRight == LOW || buttonStateSelect == LOW || buttonStateBack == LOW) {
-		buttonTime++;
+		buttonTime = buttonTime + timeDifference;
+		
 	} else {
 		buttonTime = 0;
 	}
@@ -373,7 +376,7 @@ void menu2Message()
 
 // NOTE: try to flip led on and off , work but glitchy . 
 
-	if (lastButtonStateUp == LOW && currentTime - lastCommand >= 190) {
+	if (lastButtonStateUp == LOW && currentTime - lastCommand >= 300) {
 		lastCommand = currentTime;
 		if (ledOut == LOW) {
 			ledOut = HIGH;
