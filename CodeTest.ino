@@ -84,17 +84,19 @@ int lastSelectStateMenu = 0;		// Last reading
 
 	
 	// Timming and counting related
-unsigned long count = 0; 							// To use with FOR
-unsigned long lastCount = 0;
+unsigned long buttonTime = 0; 							// Debounce
+unsigned long lastDebounceDelay = 0;		// The last time the output pin was toggled
+const int debounceDelay = 15; 		// The debounce time , how long a button need to be pressed
+const int afterDebouceDelay = 90; 	// The time 
+unsigned long currentTime = 0;
+// unsigned long lastbuttonTime = 0;
 
 int menu1ButtonTestPage = 1;			// Page at wich the menu is 
 
 int serialOutput = 20; 				// At wich speed the serial will output to console
 unsigned long lastSerialOutput = 0; 	//
 
-unsigned long lastDebounceDelay = 0;		// The last time the output pin was toggled
-const int debounceDelay = 15; 		// The debounce time , how long a button need to be pressed
-const int afterDebouceDelay = 90; 	// The time 
+
 
 byte menuSelect = 0;
 byte lastMenuSelect = 0;
@@ -191,7 +193,8 @@ void setup()
 // ==== LOOP START ====
 void loop()
 {
-	unsigned long currentTime = millis();			// Use for common timming thing
+	currentTime = millis();			// Use for common timming thing
+		
 	// Call the button routine
 	buttonRoutine();
 
@@ -221,7 +224,7 @@ void loop()
 		Serial.print(lastButtonStateUp);
 		Serial.print(ledOut);
 		Serial.println();
-		Serial.print(count);
+		Serial.print(buttonTime);
 		Serial.println();
 
 		lastSerialOutput = currentTime;
@@ -245,122 +248,85 @@ void buttonRoutine() {
 	buttonStateBack = digitalRead(buttonBack);
 
 	
-		// Stat a timer when a button is pressed
+		// Start a timer when a button is pressed
 	if (buttonStateUp == LOW || buttonStateDown == LOW || buttonStateLeft == LOW || buttonStateRight == LOW || buttonStateSelect == LOW || buttonStateBack == LOW) {
-		count++;
+		buttonTime++;
 	} else {
-		count = 0;
+		buttonTime = 0;
 	}
-	if (buttonStateUp == HIGH && lastButtonStateUp == LOW) {
-		lastButtonStateUp = HIGH;
-	}
-		// Call for button Up
-	if (buttonStateUp == LOW && count >= debounceDelay) {
-		lastButtonStateUp = LOW;
-
-//  TEST:
-
-//		if (count > (debounceDelay + afterDebouceDelay)) {
-//			count = 0;
-//		}
-
-
-//TEST:
-	} //else {
-	//	lastButtonStateUp = HIGH;
+	
+	
+//	if (buttonStateUp == HIGH && lastButtonStateUp == LOW) {
+//		lastButtonStateUp = HIGH;
 //	}
 
+		// Call for button Up
+	if (buttonStateUp == LOW && buttonTime >= debounceDelay) {
+		lastButtonStateUp = LOW;
+
+		if (buttonTime > debounceDelay + afterDebouceDelay) {
+			buttonTime = 0;
+		}
+	} else {
+		lastButtonStateUp = HIGH;
+	}
+
 		// Call for button Down
-	if (buttonStateDown == LOW && count >= debounceDelay) {
+	if (buttonStateDown == LOW && buttonTime >= debounceDelay) {
 		lastButtonStateDown = LOW;
 
-		if (count > debounceDelay + afterDebouceDelay) {
-			count = 0;
+		if (buttonTime > debounceDelay + afterDebouceDelay) {
+			buttonTime = 0;
 		}
 	} else {
 		lastButtonStateDown = HIGH;
 	}
 
 	// Call for button Left
-	if (buttonStateLeft == LOW && count >= debounceDelay) {
+	if (buttonStateLeft == LOW && buttonTime >= debounceDelay) {
 		lastButtonStateLeft = LOW;
 
-		if (count > debounceDelay + afterDebouceDelay) {
-			count = 0;
+		if (buttonTime > debounceDelay + afterDebouceDelay) {
+			buttonTime = 0;
 		}
 	} else {
 		lastButtonStateLeft = HIGH;
 	}
 
 	// Call for button Right
-	if (buttonStateRight == LOW && count >= debounceDelay) {
+	if (buttonStateRight == LOW && buttonTime >= debounceDelay) {
 		lastButtonStateRight = LOW;
 
-		if (count > debounceDelay + afterDebouceDelay) {
-			count = 0;
+		if (buttonTime > debounceDelay + afterDebouceDelay) {
+			buttonTime = 0;
 		}
 	} else {
 		lastButtonStateRight = HIGH;
 	}
 
 	// Call for button Select
-	if (buttonStateSelect == LOW && count >= debounceDelay) {
+	if (buttonStateSelect == LOW && buttonTime >= debounceDelay) {
 		lastButtonStateSelect = LOW;
 
-		if (count > debounceDelay + afterDebouceDelay) {
-			count = 0;
+		if (buttonTime > debounceDelay + afterDebouceDelay) {
+			buttonTime = 0;
 		}
 	} else {
 		lastButtonStateSelect = HIGH;
 	}
 
 	// Call for button Back
-	if (buttonStateBack == LOW && count >= debounceDelay) {
+	if (buttonStateBack == LOW && buttonTime >= debounceDelay) {
 		lastButtonStateBack = LOW;
 
-		if (count > debounceDelay + afterDebouceDelay) {
-			count = 0;
+		if (buttonTime > debounceDelay + afterDebouceDelay) {
+			buttonTime = 0;
 		}
 	} else {
 		lastButtonStateBack = HIGH;
 	}
 
 
-
-
-
-/* Some Poop that didnt work 
-	
-	
-	// Routine to detect button press with software debounce 
-	int debounceTimer;
-	int lastButtonStateArray[6] = {lastButtonStateUp, lastButtonStateDown, lastButtonStateLeft, lastButtonStateRight, lastButtonStateSelect, lastButtonStateBack};
-	int buttonStateArray[6] = {buttonStateUp, buttonStateDown, buttonStateLeft, buttonStateRight, buttonStateSelect, buttonStateBack};
-	for (int i = 0; i < 6; ++i) {
-		
-	//	if (lastButtonStateArray[i] != lastButtonStateArray[i]) {
-	//		lastDebounceDelay = millis();
-	//	}
-
- 
-
-		if (buttonStateArray[i] == LOW) {
-			count++;	
-		} 
-			
-		if (count > debounceDelay) {
-			lastButtonStateUp = LOW;
-			Serial.println();
-			Serial.print("HEEEE  ");
-			Serial.print(lastButtonStateUp);
-			Serial.println();
-			count = 0;
-		} else if (buttonStateUp == HIGH) {
-			count = 0;
-			lastButtonStateUp = HIGH;
-			}	
-	}
-*/
 }
 // ---- BUTTON MANAGEMENT END ----
 
@@ -403,12 +369,12 @@ void menu2Message()
 
 	lcd.clear();
 	lcd.setCursor(0,0);
-	lcd.print(count);
+	lcd.print(buttonTime);
 
 // NOTE: try to flip led on and off , work but glitchy . 
 
-	if (lastButtonStateUp == LOW && lastCommand == 0) {
-		lastCommand = 70;
+	if (lastButtonStateUp == LOW && currentTime - lastCommand >= 190) {
+		lastCommand = currentTime;
 		if (ledOut == LOW) {
 			ledOut = HIGH;
 		} else if (ledOut == HIGH) {
@@ -416,12 +382,11 @@ void menu2Message()
 		}		
 	digitalWrite(ledGreen, ledOut);
 	}
-if (lastCommand > 0) {
-	lastCommand = lastCommand - 1;
+
 }
 
 
-}
+
 
 void menu3()
 {
