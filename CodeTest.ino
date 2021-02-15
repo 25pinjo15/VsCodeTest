@@ -104,7 +104,7 @@ byte lastMenuSelect = 0;
 
  //	Menu 2 related variable
 
-// TEST: For testing and fun purpose
+// TEST: For testing and fun purpose, control a led .
 bool ledOut = LOW; // A output for test on menu will turn on and off a led on 
 int lastCommand = 0; // for testing command time
 
@@ -194,18 +194,20 @@ void setup()
 // ==== LOOP START ====
 void loop()
 {
+		// Update the current time and the difference betwen each cycle (used for debounce ect)
 	timeDifference = millis() - currentTime; // Used for timming reference
 	currentTime = millis();			// Use for common timming thing
 	
 	// Call the button routine
 	buttonRoutine();
 
-	// Menu selection related
+	// Menu selection 
+		// Read Raw from input from a pot and map it to the number of menu
 	selectMenuRead = analogRead(selectMenuPin);				// Read the potentiometer
 	selectStateMenu = map(selectMenuRead, 0, 1024, 1, 5);
 	
-	if (selectStateMenu == 1) {
-		menu1ButtonTest();
+	if (selectStateMenu == 1) {						// If tree for the mapping output and 
+		menu1ButtonTest();							// call the corect menu routine
 	} else if (selectStateMenu == 2) {
 			menu2Message();
 		} else if (selectStateMenu == 3) {
@@ -218,7 +220,7 @@ void loop()
  //DEBUGER:
 
  
-
+	// Serial output for debbuging
 	if (currentTime - lastSerialOutput >= serialOutput) {
 		Serial.println();
 		Serial.print(buttonStateUp);
@@ -356,10 +358,12 @@ void menu1ButtonTest()
 
 void menu2Message()
 {
+//	TODO: change the delay to a timing related.
 	
-	// Routine to show a message first.	
+	// Routine to show a message first if it is the first time menu is shown
 	if (lastSelectStateMenu != 2)
 	{
+	
 	lcd.clear();
 	lcd.setCursor(0,0);
 	lcd.print("we are in message");
@@ -381,6 +385,7 @@ void menu2Message()
 		} else if (ledOut == HIGH) {
 			ledOut = LOW;
 		}		
+	
 	digitalWrite(ledGreen, ledOut);
 	}
 
