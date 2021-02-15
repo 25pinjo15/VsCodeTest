@@ -90,7 +90,7 @@ const int debounceDelay = 30; 					// The debounce time , how long a button need
 const int afterDebouceDelay = 90; 				// For button repetition.
 unsigned long currentTime = 0;					// Total time since program is lauch.
 int timeDifference = 0;							// Time difference between each loop . Use for timming purpose.
-// unsigned long lastbuttonTime = 0
+
 
 int menu1ButtonTestPage = 1;			// Page at wich the menu is 
 
@@ -240,8 +240,9 @@ void loop()
 
 // ==== BUTTON MANAGEMENT START ====
 void buttonRoutine() {
-	// Routine to state all button
+	// Routine to state all button, with debouce
 
+		// Read the raw data from input pin
 	buttonStateUp = digitalRead(buttonUp);
 	buttonStateDown = digitalRead(buttonDown);
 	buttonStateLeft = digitalRead(buttonLeft);
@@ -250,19 +251,15 @@ void buttonRoutine() {
 	buttonStateBack = digitalRead(buttonBack);
 
 	
-		// Start a timer when a button is pressed
+		// Start a timer when a button is pressed wich work with currentTime. Add the diffenrence to
+		// button time and clear it if the button is release. 
 	if (buttonStateUp == LOW || buttonStateDown == LOW || buttonStateLeft == LOW || buttonStateRight == LOW || buttonStateSelect == LOW || buttonStateBack == LOW) {
-		buttonTime = buttonTime + timeDifference;
-		
+		buttonTime = buttonTime + timeDifference;	
 	} else {
 		buttonTime = 0;
 	}
 	
 	
-//	if (buttonStateUp == HIGH && lastButtonStateUp == LOW) {
-//		lastButtonStateUp = HIGH;
-//	}
-
 		// Call for button Up
 	if (buttonStateUp == LOW && buttonTime >= debounceDelay) {
 		lastButtonStateUp = LOW;
@@ -374,7 +371,8 @@ void menu2Message()
 	lcd.setCursor(0,0);
 	lcd.print(buttonTime);
 
-// NOTE: try to flip led on and off , work but glitchy . 
+// NOTE: now work with the current time (who is millis)
+// 		same for the button call 
 
 	if (lastButtonStateUp == LOW && currentTime - lastCommand >= 300) {
 		lastCommand = currentTime;
