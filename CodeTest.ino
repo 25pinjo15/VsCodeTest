@@ -216,13 +216,16 @@ void loop()
 	
 	if (selectStateMenu == 1) {						// If tree for the mapping output and 
 		menu1ButtonTest();							// call the corect menu routine
-	} else if (selectStateMenu == 2) {
-			menu2Message();
-		} else if (selectStateMenu == 3) {
-			menu3();
-			} else if (selectStateMenu == 4) {
-				menu4();
-				}
+	} 
+	else if (selectStateMenu == 2) {
+		menu2Message();
+	} 
+	else if (selectStateMenu == 3) {
+		menu3();
+	} 
+	else if (selectStateMenu == 4) {
+		menu4();
+	}
 
 	
  //DEBUGER:
@@ -265,7 +268,8 @@ void buttonRoutine() {
 		// button time and clear it if the button is release. 
 	if (buttonStateUp == LOW || buttonStateDown == LOW || buttonStateLeft == LOW || buttonStateRight == LOW || buttonStateSelect == LOW || buttonStateBack == LOW) {
 		buttonTime = buttonTime + timeDifference;	
-	} else {
+	} 
+	else {
 		buttonTime = 0;
 	}
 	
@@ -277,7 +281,8 @@ void buttonRoutine() {
 		if (buttonTime > debounceDelay + afterDebouceDelay) {
 			buttonTime = 0;
 		}
-	} else {
+	} 
+	else {
 		lastButtonStateUp = HIGH;
 	}
 
@@ -288,7 +293,8 @@ void buttonRoutine() {
 		if (buttonTime > debounceDelay + afterDebouceDelay) {
 			buttonTime = 0;
 		}
-	} else {
+	} 
+	else {
 		lastButtonStateDown = HIGH;
 	}
 
@@ -310,7 +316,8 @@ void buttonRoutine() {
 		if (buttonTime > debounceDelay + afterDebouceDelay) {
 			buttonTime = 0;
 		}
-	} else {
+	} 
+	else {
 		lastButtonStateRight = HIGH;
 	}
 
@@ -321,7 +328,8 @@ void buttonRoutine() {
 		if (buttonTime > debounceDelay + afterDebouceDelay) {
 			buttonTime = 0;
 		}
-	} else {
+	} 
+	else {
 		lastButtonStateSelect = HIGH;
 	}
 
@@ -332,7 +340,8 @@ void buttonRoutine() {
 		if (buttonTime > debounceDelay + afterDebouceDelay) {
 			buttonTime = 0;
 		}
-	} else {
+	} 
+	else {
 		lastButtonStateBack = HIGH;
 	}
 
@@ -370,18 +379,20 @@ void menu2Message()
 	
 		// Routine to show a message first if it is the first time menu is shown
 	if (lastSelectStateMenu != 2) {					// If the menu was not selected it show a message first
-	lcd.clear();
-	lcd.setCursor(0,0);
-	lcd.print("we are in message");
-	lastSelectStateMenu = 2; 					// Write the current menu selection so it don't display anymore
-	int welcomeTimer = 1;						// Set the welcome timer to 1 so the message still display for a moment
-	} else if (lastSelectStateMenu == 2 && welcomeTimer < 2500) {		// Timer operation to count how long the message display
+		lcd.clear();
+		lcd.setCursor(0,0);
+		lcd.print("we are in menu 2");
+		lastSelectStateMenu = 2; 					// Write the current menu selection so it don't display anymore
+		welcomeTimer = 1;							// Set the welcome timer to 1 so the message still display for a moment
+	}
+	else if (lastSelectStateMenu == 2 && welcomeTimer < 2500) {		// Timer operation to count how long the message display
 		welcomeTimer = millis() - currentTime + welcomeTimer;
-		} else {										// Now display what need to be display for this menu
-			lcd.clear();
-			lcd.setCursor(0,0);
-			lcd.print(buttonTime);
-			}
+	} 
+	else {										// Now display what need to be display for this menu
+		lcd.clear();
+		lcd.setCursor(0,0);
+		lcd.print(buttonTime);
+	}
 
 	
 
@@ -396,10 +407,10 @@ void menu2Message()
 		lastCommand = currentTime;
 		if (ledOut == LOW) {
 			ledOut = HIGH;
-		} else if (ledOut == HIGH) {
-			ledOut = LOW;
-		}		
-	
+	}
+	else if (ledOut == HIGH) {
+		ledOut = LOW;
+	}		
 	digitalWrite(ledGreen, ledOut);
 	}
 
@@ -410,12 +421,21 @@ void menu2Message()
 
 void menu3()
 {
-	if (lastSelectStateMenu != 3)
-	{
-	lcd.clear();
-	lcd.setCursor(0,0);
-	lcd.print("we are in 3");
-	lastSelectStateMenu = 3;
+		// Routine to show a message first if it is the first time menu is shown
+	if (lastSelectStateMenu != 3) {					// If the menu was not selected it show a message first
+		lcd.clear();
+		lcd.setCursor(0,0);
+		lcd.print("we are in menu 3");
+		lastSelectStateMenu = 3; 					// Write the current menu selection so it don't display anymore
+		welcomeTimer = 1;							// Set the welcome timer to 1 so the message still display for a moment
+	}
+	else if (lastSelectStateMenu == 3 && welcomeTimer < 2500) {		// Timer operation to count how long the message display
+		welcomeTimer = millis() - currentTime + welcomeTimer;
+	} 
+	else {										// Now display what need to be display for this menu
+		lcd.clear();
+		lcd.setCursor(0,0);
+		lcd.print(buttonTime);
 	}
 
 // write something
