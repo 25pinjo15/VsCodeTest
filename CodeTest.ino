@@ -58,30 +58,39 @@ int selectMenuPin = A0;		// Potentiometer connected to Analog in 0
 
 // ==== VARIABLE DECLARATION START ====
 
-	// Input Related
-byte buttonStateUp = HIGH;			// Button 0 = Pressed 1 = Not Pressed
-byte lastButtonStateUp = HIGH;		// Last reading
-int buttonTimeUp = 0;
+	// Menu navigation Input Related
+byte buttonStateUp = HIGH;				// Button 0 = Pressed 1 = Not Pressed
+byte lastButtonStateUp = HIGH;			// Last reading
 
 byte buttonStateDown = HIGH;			// Button 0 = Pressed 1 = Not Pressed
-byte lastButtonStateDown = HIGH; 	// Last reading
+byte lastButtonStateDown = HIGH; 		// Last reading
 
 byte buttonStateLeft = HIGH;			// Button 0 = Pressed 1 = Not Pressed
-byte lastButtonStateLeft = HIGH; 	// Last reading
+byte lastButtonStateLeft = HIGH; 		// Last reading
 
-byte buttonStateRight = HIGH;		// Button 0 = Pressed 1 = Not Pressed
-byte lastButtonStateRight = HIGH;	// Last reading
+byte buttonStateRight = HIGH;			// Button 0 = Pressed 1 = Not Pressed
+byte lastButtonStateRight = HIGH;		// Last reading
 
-byte buttonStateSelect = HIGH;		// Button 0 = Pressed 1 = Not Pressed
-byte lastButtonStateSelect = HIGH;	// Last reading
+byte buttonStateSelect = HIGH;			// Button 0 = Pressed 1 = Not Pressed
+byte lastButtonStateSelect = HIGH;		// Last reading
 
 byte buttonStateBack = HIGH;			// Button 0 = Pressed 1 = Not Pressed
 byte lastButtonStateBack = HIGH;		// Last reading
 
+
+	// All related to slider
+int slider1 = 123;						// Placeholder for slider 1 
+
+int slider2 = 456;						// Placeholder for slider 2
+
+int slider = 789;						// Placeholder for slider 3
+
+
+	// All related to menu selector
 int selectMenuRead = 0;				// Brute reading of potentiometer
 int selectStateMenu = 0;			// Will be the analog map to the numeber of menu
 int lastSelectStateMenu = 0;		// Last reading
-
+int welcomeTimer = 1;
 	
 	// Timming and counting related
 unsigned long buttonTime = 0; 					// Debounce related
@@ -167,14 +176,13 @@ void setup()
 	*/
 	lcd.lineWrap();
 
-	lcd.print("Test_Button_I2C");
-	if(LCD_ROWS > 1)
-	{
-		lcd.setCursor(0,1);
-		lcd.print("Baud:");
-		lcd.print(BAUDRATE);
-	}
+	lcd.print("VS Code Test ");	
+	lcd.setCursor(0,1);
+	lcd.print("Baud:");
+	lcd.print(BAUDRATE);
+	
 	delay(1000);
+
 	// ---- LCD INIT END ----
 
 
@@ -358,27 +366,33 @@ void menu1ButtonTest()
 
 void menu2Message()
 {
-//	TODO: change the delay to a timing related.
+//	
 	
-	// Routine to show a message first if it is the first time menu is shown
-	if (lastSelectStateMenu != 2)
-	{
-	
+		// Routine to show a message first if it is the first time menu is shown
+	if (lastSelectStateMenu != 2) {					// If the menu was not selected it show a message first
 	lcd.clear();
 	lcd.setCursor(0,0);
 	lcd.print("we are in message");
-	lastSelectStateMenu = 2;
-	delay(1500);
-	}
+	lastSelectStateMenu = 2; 					// Write the current menu selection so it don't display anymore
+	int welcomeTimer = 1;						// Set the welcome timer to 1 so the message still display for a moment
+	} else if (lastSelectStateMenu == 2 && welcomeTimer < 2500) {		// Timer operation to count how long the message display
+		welcomeTimer = millis() - currentTime + welcomeTimer;
+		} else {										// Now display what need to be display for this menu
+			lcd.clear();
+			lcd.setCursor(0,0);
+			lcd.print(buttonTime);
+			}
 
-	lcd.clear();
-	lcd.setCursor(0,0);
-	lcd.print(buttonTime);
+	
 
-// NOTE: now work with the current time (who is millis)
-// 		same for the button call 
+/* NOTE: now work with the current time (who is millis) !!!
+ 		same for the button call 
+	So ive done thing in a way that the command isnt repeated for the time writen in the if 
+*/
 
-	if (lastButtonStateUp == LOW && currentTime - lastCommand >= 300) {
+	// The action for the button in this menu
+	
+	if (lastButtonStateUp == LOW && currentTime - lastCommand >= 300) {		// This will do the command only if the command wasnt done before the said time
 		lastCommand = currentTime;
 		if (ledOut == LOW) {
 			ledOut = HIGH;
