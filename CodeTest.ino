@@ -450,14 +450,14 @@ void menu3()
 		if (menu3Page1Print == false) {
 			lcd.clear();
 			lcd.setCursor(0,0);
-			lcd.print("SLD1 SLD2 SLD3");
+			lcd.print("SLD1  SLD2  SLD3");
 			slider1LastPrint = 0;						// Reset value to make sure it display properly NOTE: need to set it to a outer range
 			slider2LastPrint = 0;						// Reset value to make sure it display properly
 			slider3LastPrint = 0;						// Reset value to make sure it display properly
 			menu3Page1Print = true;
 		}
 	
-		if (slider1 != slider1LastPrint) {
+		if (slider1 != slider1LastPrint) {				// Print the Value if the value have change
 			lcd.setCursor(0,1);
 			lcd.print("   ");
 			lcd.setCursor(0,1);
@@ -465,18 +465,18 @@ void menu3()
 			slider1LastPrint = slider1;
 		}
 
-		if (slider2 != slider2LastPrint) {
-			lcd.setCursor(5,1);
+		if (slider2 != slider2LastPrint) {				// Print the Value if the value have change
+			lcd.setCursor(6,1);
 			lcd.print("   ");
-			lcd.setCursor(5,1);
+			lcd.setCursor(6,1);
 			lcd.print(slider2);
 			slider2LastPrint = slider2;
 		}
 		
-		if (slider3 != slider3LastPrint) {
-			lcd.setCursor(10,1);
+		if (slider3 != slider3LastPrint) {				// Print the Value if the value have change
+			lcd.setCursor(12,1);
 			lcd.print("   ");
-			lcd.setCursor(10,1);
+			lcd.setCursor(12,1);
 			lcd.print(slider3);
 			slider3LastPrint = slider3;
 		} 
