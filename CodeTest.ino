@@ -83,7 +83,7 @@ int slider1 = 123;						// Placeholder for slider 1
 
 int slider2 = 456;						// Placeholder for slider 2
 
-int slider = 789;						// Placeholder for slider 3
+int slider3 = 789;						// Placeholder for slider 3
 
 
 	// All related to menu selector
@@ -111,11 +111,21 @@ unsigned long lastSerialOutput = 0; 	//
 byte menuSelect = 0;
 byte lastMenuSelect = 0;
 
- //	Menu 2 related variable
+ //	MENU 2 RELATED VARIABLE
 
-// TEST: For testing and fun purpose, control a led .
+	// TEST: For testing and fun purpose, control a led .
 bool ledOut = LOW; // A output for test on menu will turn on and off a led on 
 int lastCommand = 0; // for testing command time
+
+// MENU 3 RELATED VARIABLE
+
+byte menu3PageSelect = 1;				// Use to know wich page is selected in menu 3
+
+boolean menu3Page1Print = false; 			// Tell if the page 1 have printed for flicker free
+
+int slider1LastPrint = 0;				// Last value printed , used for flicker free
+int slider2LastPrint = 0;				// Last value printed , used for flicker free
+int slider3LastPrint = 0;				// Last value printed , used for flicker free
 
 // ---- VARIABLE DECLARATION END ----
 
@@ -234,14 +244,7 @@ void loop()
 	// Serial output for debbuging
 	if (currentTime - lastSerialOutput >= serialOutput) {
 		Serial.println();
-		Serial.print(buttonStateUp);
-		Serial.print(" and ");
-		Serial.print(lastButtonStateUp);
-		Serial.print(ledOut);
-		Serial.println();
-		Serial.print(buttonTime);
-		Serial.println();
-
+		Serial.print(welcomeTimer);
 		lastSerialOutput = currentTime;
 	}
  
@@ -388,7 +391,7 @@ void menu2Message()
 	else if (lastSelectStateMenu == 2 && welcomeTimer < 2500) {		// Timer operation to count how long the message display
 		welcomeTimer = millis() - currentTime + welcomeTimer;
 	} 
-	else {										// Now display what need to be display for this menu
+	else {											// Now display what need to be display for this menu
 		lcd.clear();
 		lcd.setCursor(0,0);
 		lcd.print(buttonTime);
@@ -407,38 +410,80 @@ void menu2Message()
 		lastCommand = currentTime;
 		if (ledOut == LOW) {
 			ledOut = HIGH;
-	}
-	else if (ledOut == HIGH) {
+		}
+		else if (ledOut == HIGH) {
 		ledOut = LOW;
-	}		
-	digitalWrite(ledGreen, ledOut);
+		}		
+		digitalWrite(ledGreen, ledOut);
 	}
 
 }
 
 
-
+/* NOTE:
+will have all 3 slider output shown and other stuff (multiple page)
+*/
 
 void menu3()
 {
+	
 		// Routine to show a message first if it is the first time menu is shown
 	if (lastSelectStateMenu != 3) {					// If the menu was not selected it show a message first
+
 		lcd.clear();
+		
 		lcd.setCursor(0,0);
 		lcd.print("we are in menu 3");
 		lastSelectStateMenu = 3; 					// Write the current menu selection so it don't display anymore
 		welcomeTimer = 1;							// Set the welcome timer to 1 so the message still display for a moment
+		menu3Page1Print = false;					// Set the print for fix text to false
+		
 	}
-	else if (lastSelectStateMenu == 3 && welcomeTimer < 2500) {		// Timer operation to count how long the message display
-		welcomeTimer = millis() - currentTime + welcomeTimer;
+	else if (welcomeTimer <= 2500) {		// Timer operation to count how long the welcome message display
+		
+		welcomeTimer = (millis() - currentTime) + welcomeTimer;
+
 	} 
-	else {										// Now display what need to be display for this menu
-		lcd.clear();
-		lcd.setCursor(0,0);
-		lcd.print(buttonTime);
+	//  =PAGE 1=
+	else if (welcomeTimer >= 2500 && menu3PageSelect == 1) {											// Now display what need to be display for page 1
+		
+		if (menu3Page1Print == false) {
+			lcd.clear();
+			lcd.setCursor(0,0);
+			lcd.print("SLD1 SLD2 SLD3");
+			slider1LastPrint = 0;						// Reset value to make sure it display properly NOTE: need to set it to a outer range
+			slider2LastPrint = 0;						// Reset value to make sure it display properly
+			slider3LastPrint = 0;						// Reset value to make sure it display properly
+			menu3Page1Print = true;
+		}
+	
+		if (slider1 != slider1LastPrint) {
+			lcd.setCursor(0,1);
+			lcd.print("   ");
+			lcd.setCursor(0,1);
+			lcd.print(slider1);
+			slider1LastPrint = slider1;
+		}
+
+		if (slider2 != slider2LastPrint) {
+			lcd.setCursor(5,1);
+			lcd.print("   ");
+			lcd.setCursor(5,1);
+			lcd.print(slider2);
+			slider2LastPrint = slider2;
+		}
+		
+		if (slider3 != slider3LastPrint) {
+			lcd.setCursor(10,1);
+			lcd.print("   ");
+			lcd.setCursor(10,1);
+			lcd.print(slider3);
+			slider3LastPrint = slider3;
+		} 
+		
 	}
 
-// write something
+
 
 }
 
