@@ -494,7 +494,7 @@ void menu3()
 		if (menu3Page2Print == false) {					// Print only once
 			lcd.clear();
 			lcd.setCursor(0,0);
-			lcd.print("yeaaa");
+			lcd.print("Side 1  Side 2");
 			
 			menu3Page1Print = false;					// Put other page first print OFF
 			menu3Page2Print = true;						// Put this page first print ON
@@ -502,7 +502,7 @@ void menu3()
 
 	}
 
-
+	//NOTE: on both you need to write the min and max page number
 	if (lastButtonStateUp == LOW && currentTime - lastCommand >= 300) {				// This will do the command only if the command wasnt done before the said time
 		lastCommand = currentTime;
 		menu3PageSelect = menu3PageSelect + 1;										// Go one page up
