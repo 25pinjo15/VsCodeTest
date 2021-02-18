@@ -122,6 +122,7 @@ int lastCommand = 0; // for testing command time
 byte menu3PageSelect = 1;				// Use to know wich page is selected in menu 3
 
 boolean menu3Page1Print = false; 			// Tell if the page 1 have printed for flicker free
+boolean menu3Page2Print = false;			// Tell if the page 2 have printed for flicker free
 
 int slider1LastPrint = 0;				// Last value printed , used for flicker free
 int slider2LastPrint = 0;				// Last value printed , used for flicker free
@@ -244,7 +245,7 @@ void loop()
 	// Serial output for debbuging
 	if (currentTime - lastSerialOutput >= serialOutput) {
 		Serial.println();
-		Serial.print(welcomeTimer);
+		Serial.print(lastButtonStateDown);
 		lastSerialOutput = currentTime;
 	}
  
@@ -437,52 +438,82 @@ void menu3()
 		lastSelectStateMenu = 3; 					// Write the current menu selection so it don't display anymore
 		welcomeTimer = 1;							// Set the welcome timer to 1 so the message still display for a moment
 		menu3Page1Print = false;					// Set the print for fix text to false
-		
+		menu3Page2Print = false;
 	}
 	else if (welcomeTimer <= 2500) {		// Timer operation to count how long the welcome message display
 		
 		welcomeTimer = (millis() - currentTime) + welcomeTimer;
 
-	} 
-	//  =PAGE 1=
-	else if (welcomeTimer >= 2500 && menu3PageSelect == 1) {											// Now display what need to be display for page 1
+	} 		
+	
+	
+		//  =PAGE 1=
+	if (welcomeTimer >= 2500 && menu3PageSelect == 1) {											// Now display what need to be display for page 1
 		
-		if (menu3Page1Print == false) {
+		if (menu3Page1Print == false) {					// Display once
 			lcd.clear();
 			lcd.setCursor(0,0);
 			lcd.print("SLD1  SLD2  SLD3");
 			slider1LastPrint = 0;						// Reset value to make sure it display properly NOTE: need to set it to a outer range
 			slider2LastPrint = 0;						// Reset value to make sure it display properly
 			slider3LastPrint = 0;						// Reset value to make sure it display properly
-			menu3Page1Print = true;
+
+			menu3Page1Print = true;						// Put this page first print on
+			menu3Page2Print = false;					// Put other page first print off
+		} 
+		else {
+			if (slider1 != slider1LastPrint) {				// Print the Value if the value have change
+				lcd.setCursor(0,1);
+				lcd.print("   ");
+				lcd.setCursor(0,1);
+				lcd.print(slider1);
+				slider1LastPrint = slider1;
+			}
+
+			if (slider2 != slider2LastPrint) {				// Print the Value if the value have change
+				lcd.setCursor(6,1);
+				lcd.print("   ");
+				lcd.setCursor(6,1);
+				lcd.print(slider2);
+				slider2LastPrint = slider2;
+			}
+			
+			if (slider3 != slider3LastPrint) {				// Print the Value if the value have change
+				lcd.setCursor(12,1);
+				lcd.print("   ");
+				lcd.setCursor(12,1);
+				lcd.print(slider3);
+				slider3LastPrint = slider3;
+			} 
 		}
 	
-		if (slider1 != slider1LastPrint) {				// Print the Value if the value have change
-			lcd.setCursor(0,1);
-			lcd.print("   ");
-			lcd.setCursor(0,1);
-			lcd.print(slider1);
-			slider1LastPrint = slider1;
-		}
-
-		if (slider2 != slider2LastPrint) {				// Print the Value if the value have change
-			lcd.setCursor(6,1);
-			lcd.print("   ");
-			lcd.setCursor(6,1);
-			lcd.print(slider2);
-			slider2LastPrint = slider2;
-		}
 		
-		if (slider3 != slider3LastPrint) {				// Print the Value if the value have change
-			lcd.setCursor(12,1);
-			lcd.print("   ");
-			lcd.setCursor(12,1);
-			lcd.print(slider3);
-			slider3LastPrint = slider3;
+		// PAGE 2
+	} else if (welcomeTimer >= 2500 && menu3PageSelect == 2) {											// Now display what need to be display for page 2
+		
+		if (menu3Page2Print == false) {					// Print only once
+			lcd.clear();
+			lcd.setCursor(0,0);
+			lcd.print("yeaaa");
+			
+			menu3Page1Print = false;					// Put other page first print OFF
+			menu3Page2Print = true;						// Put this page first print ON
 		} 
-		
+
 	}
 
+
+	if (lastButtonStateUp == LOW && currentTime - lastCommand >= 300) {				// This will do the command only if the command wasnt done before the said time
+		lastCommand = currentTime;
+		menu3PageSelect = menu3PageSelect + 1;										// Go one page up
+		menu3PageSelect = constrain(menu3PageSelect, 1, 2); 						// Limits menu range
+	}
+
+	if (lastButtonStateDown == LOW && currentTime - lastCommand >= 300) {			// This will do the command only if the command wasnt done before the said time
+		lastCommand = currentTime;												
+		menu3PageSelect = menu3PageSelect - 1;										// Go back one page 
+		menu3PageSelect = constrain(menu3PageSelect, 1, 2); 						// Limits menu range
+	}
 
 
 }
